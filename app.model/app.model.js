@@ -1,5 +1,4 @@
 const dataBaseConnection = require("../db/connection");
-const apiEndPointInfoFromFile = require("../endpoints.json");
 const fs = require("fs/promises");
 exports.fetchTopics = () => {
   return dataBaseConnection.query("SELECT * FROM topics").then((topics) => {
