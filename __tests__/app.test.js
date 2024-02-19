@@ -3,7 +3,7 @@ const dataCollectedFromDataBase = require("../db/data/test-data/index");
 const app = require("../app");
 const request = require("supertest");
 const dataBaseConnection = require("../db/connection");
-const { string } = require("pg-format");
+const apiEndPointInfoFromFile = require("../endpoints.json");
 
 beforeAll(() => seedDataBase(dataCollectedFromDataBase));
 
@@ -25,5 +25,14 @@ describe("GET /api/topics", () => {
           });
         });
       });
+  });
+});
+
+describe("GET /api", () => {
+  it("Status 200 - should return An object describing all the available endpoints on the API", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {}); /////
   });
 });
