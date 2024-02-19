@@ -15,9 +15,9 @@ describe("GET /api/topics", () => {
       .get("/api/topics")
       .expect(200)
       .then(({ body }) => {
-        const topics = body;
+        const topics = body.topics;
         expect(topics).toHaveLength(3);
-        expect(topics.slug).toBe();
+        expect(typeof topics).toBe("object");
         topics.forEach((topic) => {
           expect(topic).toMatchObject({
             slug: expect.any(String),
@@ -30,9 +30,11 @@ describe("GET /api/topics", () => {
 
 describe("GET /api", () => {
   it("Status 200 - should return An object describing all the available endpoints on the API", () => {
-    // return request(app)
-    //   .get("/api")
-    //   .expect(200)
-    //   .then((response) => {}); /////
+    return request(app)
+      .get("/api")
+      .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual(apiEndPointInfoFromFile);
+      }); 
   });
 });
