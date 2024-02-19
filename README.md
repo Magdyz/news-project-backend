@@ -2,4 +2,6 @@
 
 Setting up Environments:
 
-Add database environment to `.env` files in order to switch between test and development environments accordingly. The files are ignored from uploading to github for security.
+- Make a test and a development environment .env files. 
+- populate each with your environment variables.
+- You can use the example provided in `.env.example` as a starting point.
