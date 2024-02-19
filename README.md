@@ -1,3 +1,5 @@
-# Northcoders News API
+# NC News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+Setting up Environments:
+
+Add database environment to `.env` files in order to switch between test and development environments accordingly. The files are ignored from uploading to github for security.
