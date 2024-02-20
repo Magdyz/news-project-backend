@@ -3,6 +3,7 @@ const {
   getTopicsRequest,
   getEndpointsRequest,
   getArticleByIdRequest,
+  getArticlesRequest,
 } = require("./app.controller/app.controller");
 const {
   handle500ServerErrors,
@@ -14,6 +15,7 @@ const app = express();
 app.get("/api/topics", getTopicsRequest);
 app.get("/api", getEndpointsRequest);
 app.get("/api/articles/:article_id", getArticleByIdRequest);
+app.get("/api/articles", getArticlesRequest);
 
 app.use(handleCustomErrors);
 app.use(handle404Errors);
