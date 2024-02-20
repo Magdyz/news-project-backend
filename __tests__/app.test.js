@@ -68,7 +68,7 @@ describe("GET /api/articles/:article_id", () => {
         expect(response.body.msg).toBe("Not Found");
       });
   });
-  it("Status 400 - Should return a status 400 and appropriate message if wrong id type is inputed", () => {
+  it("Status 400 - Should return a status 400 and appropriate message if wrong id type is inputted", () => {
     return request(app)
       .get("/api/articles/article")
       .expect(400)
@@ -104,6 +104,46 @@ describe("GET /api/articles", () => {
       .expect(200)
       .then((response) => {
         expect(response.body.articles).toBeSortedBy("created_at");
+      });
+  });
+});
+
+describe("GET /api/articles/:article_id/comments", () => {
+  it("Status 200 - Should get all comments for an article.", () => {
+    return request(app)
+      .get("/api/articles/5/comments")
+      .expect(200)
+      .then((response) => {
+        const commentsReceived = response.body;
+        commentsReceived.comments.forEach((comment) => {
+          expect(comment.article_id).toBe(5);
+        });
+      });
+  });
+  it("Should return a sorted list of comments with the newest first", () => {
+    return request(app)
+      .get("/api/articles/5/comments")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.comments).toBeSortedBy("created_at", {
+          descending: true,
+        });
+      });
+  });
+  it("Status 404 - Should return a status of 404 and appropriate message if no comments are found with that ID.", () => {
+    return request(app)
+      .get("/api/articles/5555/comments")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Not Found");
+      });
+  });
+  it("Status 400 - Should return a status 400 and appropriate message if wrong article id type is inputted", () => {
+    return request(app)
+      .get("/api/articles/string/comments")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
       });
   });
 });

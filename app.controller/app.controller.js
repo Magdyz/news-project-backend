@@ -3,6 +3,7 @@ const {
   fetchEndPointData,
   fetchArticles,
   fetchArticleById,
+  fetchCommentsByArticleId,
 } = require("../app.model/app.model");
 
 exports.getTopicsRequest = (request, response, next) => {
@@ -14,7 +15,6 @@ exports.getTopicsRequest = (request, response, next) => {
       next(error);
     });
 };
-
 exports.getEndpointsRequest = (request, response, next) => {
   return fetchEndPointData()
     .then((dataFromFile) => {
@@ -24,21 +24,32 @@ exports.getEndpointsRequest = (request, response, next) => {
       next(error);
     });
 };
-
 exports.getArticleByIdRequest = (request, response, next) => {
   return fetchArticleById(request.params.article_id)
     .then((articleData) => {
       const articleById = articleData.rows;
-      return response.status(200).send({article: articleById[0]});
+      return response.status(200).send({ article: articleById[0] });
     })
     .catch((error) => {
       next(error);
     });
 };
-
 exports.getArticlesRequest = (request, response, next) => {
-  fetchArticles().then((articleReceived) => {
-    const articles = articleReceived.rows
-    return response.status(200).send({ articles });
-  })
-}
+  fetchArticles()
+    .then((articleReceived) => {
+      const articles = articleReceived.rows;
+      return response.status(200).send({ articles });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+exports.getCommentsByArticleId = (request, response, next) => {
+  fetchCommentsByArticleId(request.params.id)
+    .then((commentsReceived) => {
+      return response.status(200).send({ comments: commentsReceived });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};

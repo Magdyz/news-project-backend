@@ -1,17 +1,16 @@
 const dataBaseConnection = require("../db/connection");
 const fs = require("fs/promises");
+
 exports.fetchTopics = () => {
   return dataBaseConnection.query("SELECT * FROM topics").then((topics) => {
     return topics.rows;
   });
 };
-
 exports.fetchEndPointData = () => {
   return fs.readFile("endpoints.json", "utf8").then((data) => {
     return JSON.parse(data);
   });
 };
-
 exports.fetchArticleById = (id) => {
   return dataBaseConnection
     .query("SELECT * FROM articles WHERE article_id = $1;", [id])
@@ -22,7 +21,6 @@ exports.fetchArticleById = (id) => {
       return articleData;
     });
 };
-
 exports.fetchArticles = () => {
   return dataBaseConnection
     .query(
@@ -30,5 +28,18 @@ exports.fetchArticles = () => {
     )
     .then((articles) => {
       return articles;
+    });
+};
+exports.fetchCommentsByArticleId = (articleId) => {
+  return dataBaseConnection
+    .query(
+      "SELECT * FROM comments WHERE article_id=$1 ORDER BY created_at DESC;",
+      [articleId]
+    )
+    .then((comments) => {
+      if (comments.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not Found" });
+      }
+      return comments.rows;
     });
 };
