@@ -31,7 +31,6 @@ exports.getArticleByIdRequest = (request, response, next) => {
       return response.status(200).send(articleById[0]);
     })
     .catch((error) => {
-      console.log(error)
       next(error);
     });
 };
