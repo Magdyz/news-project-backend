@@ -6,6 +6,7 @@ const {
   fetchCommentsByArticleId,
   addCommentToDB,
   addVoteToArticle,
+  deleteCommentById,
 } = require("../app.model/app.model");
 
 exports.getTopicsRequest = (request, response, next) => {
@@ -75,5 +76,14 @@ exports.patchArticle = (request, response, next) => {
     })
     .catch((error) => {
       next(error);
+    });
+};
+exports.removeCommentRequest = (request, response, next) => {
+  deleteCommentById(request.params.comment_id)
+    .then(() => {
+      response.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
     });
 };

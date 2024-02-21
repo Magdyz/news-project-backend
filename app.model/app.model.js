@@ -72,3 +72,12 @@ exports.addVoteToArticle = (inc_votes, articleId) => {
     return articleToPatch;
   });
 };
+exports.deleteCommentById = (commentId) => {
+  return dataBaseConnection
+    .query("DELETE FROM comments WHERE comment_id=$1 RETURNING *", [commentId])
+    .then((deleted) => {
+      if (deleted.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not Found" });
+      }
+    })
+};

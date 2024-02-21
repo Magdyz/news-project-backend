@@ -249,14 +249,14 @@ describe("PATCH /api/articles/:article_id", () => {
   });
   it("Status 400 - send wrong inc_votes type", () => {
     const patchBody = { inc_votes: "testing" };
-  return request(app)
-    .patch("/api/articles/4")
-    .send(patchBody)
-    .expect(400)
-    .then(({ body }) => {
-      expect(body.msg).toBe("Bad Request");
-    });
-});
+    return request(app)
+      .patch("/api/articles/4")
+      .send(patchBody)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
   it("Status 404 - invalid article ID", () => {
     return request(app)
       .patch("/api/articles/invalid_id")
@@ -264,16 +264,41 @@ describe("PATCH /api/articles/:article_id", () => {
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("Not Found");
-      });;
+      });
   });
 
   it("Status 404 - article not found", () => {
     return request(app)
-      .patch("/api/articles/999") 
+      .patch("/api/articles/999")
       .send(patchBody)
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("Not Found");
-      });;
+      });
   });
 });
+
+describe("DELETE /api/comments/:comment_id", () => {
+  it("Status 204 - deletes a comment by id", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+
+  it("Status 404 - returns 404 if comment isn't found", () => {
+    return request(app)
+      .delete("/api/comments/55555")
+      .expect(404)
+      .then(({ body }) => {
+        console.log(body);
+        expect(body.msg).toEqual("Not Found");
+      });
+  });
+
+  it("Status 400 - invalid comment ID", () => {
+    return request(app)
+      .delete("/api/comments/invalid_id")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  })
+})

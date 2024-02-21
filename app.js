@@ -7,6 +7,7 @@ const {
   getCommentsByArticleId,
   PostCommentRequest,
   patchArticle,
+  removeCommentRequest,
 } = require("./app.controller/app.controller");
 const {
   handle500ServerErrors,
@@ -24,6 +25,7 @@ app.get("/api/articles", getArticlesRequest);
 app.get("/api/articles/:id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", PostCommentRequest);
 app.patch("/api/articles/:article_id", patchArticle);
+app.delete("/api/comments/:comment_id", removeCommentRequest);
 
 app.use(handleCustomErrors);
 app.use(handle404Errors);
