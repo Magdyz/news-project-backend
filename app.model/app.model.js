@@ -1,4 +1,3 @@
-const { all } = require("../app");
 const dataBaseConnection = require("../db/connection");
 const fs = require("fs/promises");
 

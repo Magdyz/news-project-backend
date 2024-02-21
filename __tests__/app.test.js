@@ -4,7 +4,6 @@ const app = require("../app");
 const request = require("supertest");
 const dataBaseConnection = require("../db/connection");
 const apiEndPointInfoFromFile = require("../endpoints.json");
-const { patchArticle } = require("../app.controller/app.controller");
 
 beforeAll(() => seedDataBase(dataCollectedFromDataBase));
 
