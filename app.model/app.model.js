@@ -43,3 +43,14 @@ exports.fetchCommentsByArticleId = (articleId) => {
       return comments.rows;
     });
 };
+exports.addCommentToDB = (userData, articleId) => {
+  const { username, body } = userData;
+  return dataBaseConnection
+    .query(
+      "INSERT INTO comments (body, votes, author, article_id) VALUES ($1, $2, $3, $4) RETURNING *;",
+      [body, 0, username, articleId]
+    )
+    .then(({ rows }) => {
+      return rows
+    })
+};
