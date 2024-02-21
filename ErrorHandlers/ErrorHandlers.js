@@ -12,6 +12,6 @@ exports.handle500ServerErrors = (error, req, res, next) => {
 exports.handle404Errors = (error, req, res, next) => {
   if (error.status && error.msg) {
     res.status(error.status).send({ msg: error.msg });
-  }
+  } 
   next();
 };

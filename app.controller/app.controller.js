@@ -5,6 +5,7 @@ const {
   fetchArticleById,
   fetchCommentsByArticleId,
   addCommentToDB,
+  addVoteToArticle,
 } = require("../app.model/app.model");
 
 exports.getTopicsRequest = (request, response, next) => {
@@ -55,9 +56,22 @@ exports.getCommentsByArticleId = (request, response, next) => {
     });
 };
 exports.PostCommentRequest = (request, response, next) => {
-  addCommentToDB(request.body, request.params.article_id)
+  const username = request.body.username;
+  const body = request.body.body;
+  addCommentToDB(username, body, request.params.article_id)
     .then((confirmationData) => {
       return response.status(201).send({ comment: confirmationData });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+exports.patchArticle = (request, response, next) => {
+  const inc_votes = request.body.inc_votes;
+  const articleId = request.params.article_id;
+  addVoteToArticle(inc_votes, articleId)
+    .then((patchedArticle) => {
+      response.status(200).send({ article: patchedArticle });
     })
     .catch((error) => {
       next(error);
