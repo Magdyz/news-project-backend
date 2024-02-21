@@ -4,6 +4,7 @@ const app = require("../app");
 const request = require("supertest");
 const dataBaseConnection = require("../db/connection");
 const apiEndPointInfoFromFile = require("../endpoints.json");
+const { patchArticle } = require("../app.controller/app.controller");
 
 beforeAll(() => seedDataBase(dataCollectedFromDataBase));
 
@@ -174,7 +175,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         });
       });
   });
-  it("Status 400 - Should return a status 400 and appropriate message if wrong id type is inputted", () => {
+  it("Status 400 - Should return a status 400 and appropriate message if wrong id number is inputted", () => {
     const postBody = {
       username: "butter_bridge",
       body: "This is my first comment!",
@@ -187,10 +188,10 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(body.msg).toBe("Bad Request");
       });
   });
-  it("Status 400 - Should return a status of 400 and appropriate message if username doesn't exist.", () => {
+  it("Status 400 - Should return a status 400 and appropriate message if username is not in users", () => {
     const postBody = {
       username: "Mo",
-      body: "This is my first comment!",
+      body: "This is my Second comment!",
     };
     return request(app)
       .post("/api/articles/3/comments")
@@ -199,5 +200,81 @@ describe("POST /api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         expect(body.msg).toBe("Bad Request");
       });
+  });
+  it("Status 404 - Should return a status of 404 and appropriate message if username or body doesn't exist.", () => {
+    const postBody = {
+      username: "",
+      body: "",
+    };
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(postBody)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Missing Data");
+      });
+  });
+});
+
+describe("PATCH /api/articles/:article_id", () => {
+  const patchBody = { inc_votes: 1 };
+  it("Status 200 - update an article by article_id.", () => {
+    const expectedArticle = {
+      article_id: 4,
+      title: "Student SUES Mitch!",
+      topic: "mitch",
+      author: "rogersop",
+      body: "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
+      created_at: "2020-05-06T01:14:00.000Z",
+      votes: 1,
+      article_img_url:
+        "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+    };
+    return request(app)
+      .patch("/api/articles/4")
+      .send(patchBody)
+      .expect(200)
+      .then((patched) => {
+        const patchedArticle = patched.body.article[0];
+        expect(patchedArticle.votes).toBe(expectedArticle.votes);
+        expect(patchedArticle).toMatchObject(expectedArticle);
+      });
+  });
+  it("Status 400 - missing request body", () => {
+    return request(app)
+      .patch("/api/articles/4")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  it("Status 400 - send wrong inc_votes type", () => {
+    const patchBody = { inc_votes: "testing" };
+  return request(app)
+    .patch("/api/articles/4")
+    .send(patchBody)
+    .expect(400)
+    .then(({ body }) => {
+      expect(body.msg).toBe("Bad Request");
+    });
+});
+  it("Status 404 - invalid article ID", () => {
+    return request(app)
+      .patch("/api/articles/invalid_id")
+      .send(patchBody)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Not Found");
+      });;
+  });
+
+  it("Status 404 - article not found", () => {
+    return request(app)
+      .patch("/api/articles/999") 
+      .send(patchBody)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Not Found");
+      });;
   });
 });

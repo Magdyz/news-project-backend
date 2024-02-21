@@ -1,3 +1,4 @@
+const { all } = require("../app");
 const dataBaseConnection = require("../db/connection");
 const fs = require("fs/promises");
 
@@ -43,14 +44,32 @@ exports.fetchCommentsByArticleId = (articleId) => {
       return comments.rows;
     });
 };
-exports.addCommentToDB = (userData, articleId) => {
-  const { username, body } = userData;
+exports.addCommentToDB = (username, body, articleId) => {
+  if (!body || !username) {
+    return Promise.reject({ status: 404, msg: "Missing Data" });
+  }
   return dataBaseConnection
     .query(
       "INSERT INTO comments (body, votes, author, article_id) VALUES ($1, $2, $3, $4) RETURNING *;",
       [body, 0, username, articleId]
     )
     .then(({ rows }) => {
-      return rows
-    })
+      return rows;
+    });
+};
+exports.addVoteToArticle = (inc_votes, articleId) => {
+  if (!inc_votes || typeof inc_votes !== "number" || isNaN(inc_votes)) {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+  return dataBaseConnection.query("SELECT * FROM articles").then((articles) => {
+    const allArticles = articles.rows;
+    const articleToPatch = allArticles.filter((article) => {
+      return article.article_id === parseInt(articleId);
+    });
+    if (articleToPatch.length === 0) {
+      return Promise.reject({ status: 404, msg: "Not Found" });
+    }
+    articleToPatch[0].votes += inc_votes;
+    return articleToPatch;
+  });
 };

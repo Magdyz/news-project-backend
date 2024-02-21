@@ -61,13 +61,27 @@
     "queries": [],
     "exampleResponse": {
       "comment": {
-            "comment_id": 19,
-            "body": "This is my first comment!",
-            "article_id": 3,
-            "author": "butter_bridge",
-            "votes": 0,
-            "created_at": "2024-02-21T10:41:22.019Z"
-          }
+        "comment_id": 19,
+        "body": "This is my first comment!",
+        "article_id": 3,
+        "author": "butter_bridge",
+        "votes": 0,
+        "created_at": "2024-02-21T10:41:22.019Z"
+      }
+    }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "update an article by article_id. Api responds with the updated comment",
+    "queries": [],
+    "exampleResponse": {
+      "article_id": 4,
+      "title": "Student SUES Mitch!",
+      "topic": "mitch",
+      "author": "rogersop",
+      "body": "We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages",
+      "created_at": "2020-05-06T01:14:00.000Z",
+      "votes": 1,
+      "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
     }
   }
 }
