@@ -4,6 +4,7 @@ const {
   fetchArticles,
   fetchArticleById,
   fetchCommentsByArticleId,
+  addCommentToDB,
 } = require("../app.model/app.model");
 
 exports.getTopicsRequest = (request, response, next) => {
@@ -48,6 +49,15 @@ exports.getCommentsByArticleId = (request, response, next) => {
   fetchCommentsByArticleId(request.params.id)
     .then((commentsReceived) => {
       return response.status(200).send({ comments: commentsReceived });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+exports.PostCommentRequest = (request, response, next) => {
+  addCommentToDB(request.body, request.params.article_id)
+    .then((confirmationData) => {
+      return response.status(201).send({ comment: confirmationData });
     })
     .catch((error) => {
       next(error);

@@ -147,3 +147,57 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  it("Status 201 - should add a comment for an article.", () => {
+    const postBody = {
+      username: "butter_bridge",
+      body: "This is my first comment!",
+    };
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(postBody)
+      .expect(201)
+      .then((postConfirmation) => {
+        const post = postConfirmation.body;
+        expect(post.comment[0].author).toBe(postBody.username);
+        expect(post.comment[0].body).toBe(postBody.body);
+        post.comment.forEach((article) => {
+          expect(article).toMatchObject({
+            comment_id: expect.any(Number),
+            body: expect.any(String),
+            article_id: expect.any(Number),
+            author: expect.any(String),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+          });
+        });
+      });
+  });
+  it("Status 400 - Should return a status 400 and appropriate message if wrong id type is inputted", () => {
+    const postBody = {
+      username: "butter_bridge",
+      body: "This is my first comment!",
+    };
+    return request(app)
+      .post("/api/articles/3000/comments")
+      .send(postBody)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  it("Status 400 - Should return a status of 400 and appropriate message if username doesn't exist.", () => {
+    const postBody = {
+      username: "Mo",
+      body: "This is my first comment!",
+    };
+    return request(app)
+      .post("/api/articles/3/comments")
+      .send(postBody)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+});

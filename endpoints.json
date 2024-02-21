@@ -44,7 +44,7 @@
     "description": "serves an array of all comments for the provided article id",
     "queries": [],
     "exampleResponse": {
-      "articles": [
+      "comment": [
         {
           "comment_id": 15,
           "body": "I am 100% sure that we're not completely sure.",
@@ -54,6 +54,20 @@
           "created_at": "2020-11-24T00:08:00.000Z"
         }
       ]
+    }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "Adds a comment on article. Request body accepts an object with the username and body. Api responds with the posted comment.",
+    "queries": [],
+    "exampleResponse": {
+      "comment": {
+            "comment_id": 19,
+            "body": "This is my first comment!",
+            "article_id": 3,
+            "author": "butter_bridge",
+            "votes": 0,
+            "created_at": "2024-02-21T10:41:22.019Z"
+          }
     }
   }
 }

@@ -1,5 +1,5 @@
 exports.handleCustomErrors = (error, req, res, next) => {
-  if (error.code === "22P02") {
+  if (error.code === "22P02" || error.code === "23503") {
     return res.status(400).send({ msg: "Bad Request" });
   }
   next(error);

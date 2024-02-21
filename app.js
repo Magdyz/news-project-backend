@@ -5,6 +5,7 @@ const {
   getArticleByIdRequest,
   getArticlesRequest,
   getCommentsByArticleId,
+  PostCommentRequest,
 } = require("./app.controller/app.controller");
 const {
   handle500ServerErrors,
@@ -13,11 +14,14 @@ const {
 } = require("./ErrorHandlers/ErrorHandlers");
 const app = express();
 
+app.use(express.json());
+
 app.get("/api/topics", getTopicsRequest);
 app.get("/api", getEndpointsRequest);
 app.get("/api/articles/:article_id", getArticleByIdRequest);
 app.get("/api/articles", getArticlesRequest);
 app.get("/api/articles/:id/comments", getCommentsByArticleId);
+app.post("/api/articles/:article_id/comments", PostCommentRequest);
 
 app.use(handleCustomErrors);
 app.use(handle404Errors);
