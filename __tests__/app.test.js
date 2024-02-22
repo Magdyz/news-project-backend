@@ -274,7 +274,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(patchBody)
       .expect(404)
       .then((response) => {
-        expect(response.body.msg).toBe("Not Found");
+        expect(response.body.msg).toBe("Invalid  Article ID");
       });
   });
 });
@@ -300,5 +300,25 @@ describe("DELETE /api/comments/:comment_id", () => {
       .then(({ body }) => {
         expect(body.msg).toBe("Bad Request");
       });
-  })
-})
+  });
+});
+
+describe("GET /api/users", () => {
+  it("Status 200 - Returns users when a successful request is made ", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const users = body.users;
+        expect(users).toHaveLength(4);
+        expect(typeof users).toBe("object");
+        users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
+      });
+  });
+});

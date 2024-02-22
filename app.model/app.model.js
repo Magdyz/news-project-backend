@@ -65,7 +65,7 @@ exports.addVoteToArticle = (inc_votes, articleId) => {
       .then((result) => {
         const articleToPatch = result.rows[0]; 
         if (!articleToPatch) {
-          return Promise.reject({ status: 404, msg: "Not Found" });
+          return Promise.reject({ status: 404, msg: "Invalid  Article ID" });
         }
         articleToPatch.votes += inc_votes;
         return articleToPatch;
@@ -80,3 +80,9 @@ exports.deleteCommentById = (commentId) => {
       }
     })
 };
+exports.fetchUsers = () => {
+  return dataBaseConnection.query("SELECT * FROM users").then
+    ((users) => {
+    return users.rows;
+  });
+}

@@ -7,6 +7,7 @@ const {
   addCommentToDB,
   addVoteToArticle,
   deleteCommentById,
+  fetchUsers,
 } = require("../app.model/app.model");
 
 exports.getTopicsRequest = (request, response, next) => {
@@ -87,3 +88,13 @@ exports.removeCommentRequest = (request, response, next) => {
       next(err);
     });
 };
+exports.getUsersRequest = (request, response, next) => {
+  return fetchUsers()
+    .then((users) => {
+      return response.status(200).send({ users });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
