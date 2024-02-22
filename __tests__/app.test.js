@@ -322,3 +322,46 @@ describe("GET /api/users", () => {
       });
   });
 });
+
+describe("GET /api/articles (topic query)", () => {
+  it("Status 200 - returns articles with matching topic from db", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        expect(typeof body.articles).toBe("object");
+        expect(body.articles.length).toEqual(12);
+        body.articles.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+        });
+      });
+  });
+  it("Status 200 - returns all articles when no topic is in query", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then(({ body }) => {
+        body.articles.forEach((article) => {
+          expect(article).toMatchObject({
+            article_id: expect.any(Number),
+            title: expect.any(String),
+            topic: expect.any(String),
+            author: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          });
+        });
+      });
+  });
+  it("Status 404 - returns 404 if topic isn't found", () => {
+    return request(app)
+      .get("/api/articles?topic=testing")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toEqual("Topic Not Found");
+      });
+  });
+  
+});

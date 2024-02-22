@@ -8,6 +8,7 @@ const {
   addVoteToArticle,
   deleteCommentById,
   fetchUsers,
+  fetchArticlesByTopic,
 } = require("../app.model/app.model");
 
 exports.getTopicsRequest = (request, response, next) => {
@@ -39,9 +40,9 @@ exports.getArticleByIdRequest = (request, response, next) => {
     });
 };
 exports.getArticlesRequest = (request, response, next) => {
-  fetchArticles()
+  fetchArticles(request.query.topic)
     .then((articleReceived) => {
-      const articles = articleReceived.rows;
+      const articles = articleReceived;
       return response.status(200).send({ articles });
     })
     .catch((error) => {
@@ -97,4 +98,3 @@ exports.getUsersRequest = (request, response, next) => {
       next(error);
     });
 };
-
