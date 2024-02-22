@@ -234,7 +234,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(patchBody)
       .expect(200)
       .then((patched) => {
-        const patchedArticle = patched.body.article[0];
+        const patchedArticle = patched.body.article;
         expect(patchedArticle.votes).toBe(expectedArticle.votes);
         expect(patchedArticle).toMatchObject(expectedArticle);
       });
@@ -242,6 +242,7 @@ describe("PATCH /api/articles/:article_id", () => {
   it("Status 400 - missing request body", () => {
     return request(app)
       .patch("/api/articles/4")
+      .send({})
       .expect(400)
       .then(({ body }) => {
         expect(body.msg).toBe("Bad Request");
@@ -257,13 +258,13 @@ describe("PATCH /api/articles/:article_id", () => {
         expect(body.msg).toBe("Bad Request");
       });
   });
-  it("Status 404 - invalid article ID", () => {
+  it("Status 400 - invalid article ID", () => {
     return request(app)
       .patch("/api/articles/invalid_id")
       .send(patchBody)
-      .expect(404)
+      .expect(400)
       .then((response) => {
-        expect(response.body.msg).toBe("Not Found");
+        expect(response.body.msg).toBe("Bad Request");
       });
   });
 
