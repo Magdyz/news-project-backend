@@ -22,7 +22,6 @@ app.use(express.json());
 
 app.get("/api", getEndpointsRequest);
 app.get("/api/articles", getArticlesRequest);
-// app.get("/api/articles", getArticlesByTopic);
 app.get("/api/users", getUsersRequest);
 app.get("/api/topics", getTopicsRequest);
 app.get("/api/articles/:article_id", getArticleByIdRequest);
