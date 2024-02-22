@@ -2,6 +2,17 @@
   "GET /api": {
     "description": "serves up a json representation of all the available endpoints of the api"
   },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": [
+      {
+        "username": "lurker",
+        "name": "do_nothing",
+        "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+      }
+    ]
+  },
   "GET /api/topics": {
     "description": "serves an array of all topics",
     "queries": [],
@@ -88,5 +99,5 @@
     "description": "Deletes the given comment by id which doesn't return any data",
     "queries": [],
     "exampleResponse": {}
-}
+  }
 }
