@@ -60,15 +60,23 @@ exports.addVoteToArticle = (inc_votes, articleId) => {
   if (!inc_votes || typeof inc_votes !== "number" || isNaN(inc_votes)) {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
-  return dataBaseConnection.query("SELECT * FROM articles").then((articles) => {
-    const allArticles = articles.rows;
-    const articleToPatch = allArticles.filter((article) => {
-      return article.article_id === parseInt(articleId);
-    });
-    if (articleToPatch.length === 0) {
-      return Promise.reject({ status: 404, msg: "Not Found" });
-    }
-    articleToPatch[0].votes += inc_votes;
-    return articleToPatch;
-  });
+    return dataBaseConnection
+      .query("SELECT * FROM articles WHERE article_id = $1", [articleId])
+      .then((result) => {
+        const articleToPatch = result.rows[0]; 
+        if (!articleToPatch) {
+          return Promise.reject({ status: 404, msg: "Not Found" });
+        }
+        articleToPatch.votes += inc_votes;
+        return articleToPatch;
+      });
+};
+exports.deleteCommentById = (commentId) => {
+  return dataBaseConnection
+    .query("DELETE FROM comments WHERE comment_id=$1 RETURNING *", [commentId])
+    .then((deleted) => {
+      if (deleted.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Not Found" });
+      }
+    })
 };
