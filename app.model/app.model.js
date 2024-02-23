@@ -159,3 +159,20 @@ exports.fetchUsers = (username) => {
     return users.rows;
   });
 };
+
+exports.addVoteToComment = (inc_votes, commentId) => {
+  if (!inc_votes || typeof inc_votes !== "number" || isNaN(inc_votes)) {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+  return dataBaseConnection
+    .query("SELECT * FROM comments WHERE comment_id = $1", [commentId])
+    .then((result) => {
+      const commentToPatch = result.rows[0];
+      if (!commentToPatch) {
+        return Promise.reject({ status: 404, msg: "Comment Not Found" });
+      }
+      commentToPatch.votes += inc_votes;
+      return commentToPatch;
+    });
+};
+

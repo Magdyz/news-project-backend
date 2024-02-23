@@ -428,3 +428,54 @@ describe("GET /api/users/:username", () => {
       });
   });
 });
+
+describe("PATCH /api/comments/:comment_id", () => {
+  const patchBody = { inc_votes: 1 };
+  it("Status 200 - update an comment by comment id.", () => {
+    const expectedArticle = {
+      comment_id: 3,
+      body: "Replacing the quiet elegance of the dark suit and tie with the casual indifference of these muted earth tones is a form of fashion suicide, but, uh, call me crazy — onyou it works.",
+      article_id: 1,
+      author: "icellusedkars",
+      votes: 101,
+      created_at: "2020-03-01T01:13:00.000Z",
+    };
+    return request(app)
+      .patch("/api/comments/3")
+      .send(patchBody)
+      .expect(200)
+      .then((patched) => {
+        const patchedArticle = patched.body.comment;
+        expect(patchedArticle.votes).toBe(expectedArticle.votes);
+        expect(patchedArticle).toMatchObject(expectedArticle);
+      });
+  });
+  it("Status 400 - missing request body", () => {
+    return request(app)
+      .patch("/api/comments/3")
+      .send({})
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  it("Status 400 - send wrong inc_votes type", () => {
+    const patchBody = { inc_votes: "testing" };
+    return request(app)
+      .patch("/api/comments/3")
+      .send(patchBody)
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Bad Request");
+      });
+  });
+  it("Status 404 - article not found", () => {
+    return request(app)
+      .patch("/api/comments/30000")
+      .send(patchBody)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Comment Not Found");
+      });
+  });
+});

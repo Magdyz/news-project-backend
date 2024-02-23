@@ -8,6 +8,7 @@ const {
   addVoteToArticle,
   deleteCommentById,
   fetchUsers,
+  addVoteToComment,
 } = require("../app.model/app.model");
 
 exports.getTopicsRequest = (request, response, next) => {
@@ -101,3 +102,15 @@ exports.getUsersRequest = (request, response, next) => {
       next(error);
     });
 };
+exports.patchCommentById = (request, response, next) => {
+  const inc_votes = request.body.inc_votes;
+  const commentId = request.params.comment_id;
+  addVoteToComment(inc_votes, commentId)
+    .then((comment) => {
+      response.status(200).send({ comment: comment });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
