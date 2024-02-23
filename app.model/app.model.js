@@ -49,6 +49,7 @@ exports.fetchArticles = (
     "created_at",
     "votes",
     "article_img_url",
+    "comment_count",
   ];
   const orderList = ["ASC", "DESC"];
   if (

@@ -9,7 +9,6 @@ const {
   patchArticle,
   removeCommentRequest,
   getUsersRequest,
-  getArticlesByTopic,
 } = require("./app.controller/app.controller");
 const {
   handle500ServerErrors,
