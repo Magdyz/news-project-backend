@@ -56,8 +56,8 @@ This command will execute all the tests in the project to ensure everything is w
 
 ## Setting up Environments:
 
-- Make a test and a development environment .env files. 
-- populate each with your environment variables.
+- Inside the root directory, create two new files named `.env.development` and `.env.test`.  These files will hold your environment variables for development and testing respectively. 
+- Populate each with your environment variables.
 - You can use the example provided in `.env.example` as a starting point.
 
 `PGDATABASE =  <YOUR_DB_NAME>` 
