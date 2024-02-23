@@ -93,7 +93,7 @@ exports.removeCommentRequest = (request, response, next) => {
     });
 };
 exports.getUsersRequest = (request, response, next) => {
-  return fetchUsers()
+  return fetchUsers(request.params.username)
     .then((users) => {
       return response.status(200).send({ users });
     })
