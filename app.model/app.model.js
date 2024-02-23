@@ -34,15 +34,42 @@ exports.fetchArticleById = (id) => {
       return articleData;
     });
 };
-exports.fetchArticles = (topicToFilter) => {
+exports.fetchArticles = (
+  topicToFilter,
+  sortby = "created_at",
+  order = "ASC"
+) => {
   const topics = ["mitch", "cats", "paper"];
- 
+  const columns = [
+    "article_id",
+    "title",
+    "topic",
+    "author",
+    "body",
+    "created_at",
+    "votes",
+    "article_img_url",
+  ];
+  const orderList = ["ASC", "DESC"];
+  if (
+    !columns.includes(sortby) ||
+    !orderList.includes(order.toUpperCase() || !topics.includes(topicToFilter))
+  ) {
+    return Promise.reject({ status: 404, msg: "Not Found" });
+  }
   if (topicToFilter) {
-     if (!topics.includes(topicToFilter)) {
-       return Promise.reject({ status: 404, msg: "Topic Not Found" });
-     }
+    if (!topics.includes(topicToFilter)) {
+      return Promise.reject({ status: 404, msg: "Topic Not Found" });
+    }
     return dataBaseConnection
-      .query(`SELECT * FROM articles WHERE topic = '${topicToFilter}'`)
+      .query(
+        `SELECT articles.author,articles.title,articles.article_id, articles.topic, articles.created_at,articles.votes, articles.article_img_url, 
+        COUNT(comments.article_id)::integer AS comment_count 
+        FROM articles 
+        LEFT JOIN comments ON articles.article_id = comments.article_id
+        WHERE topic = $1
+        GROUP BY articles.article_id`,[topicToFilter]
+      )
       .then((articlesBytopic) => {
         if (articlesBytopic.rowCount === 0) {
           return Promise.reject({ status: 400, msg: "No Content" });
@@ -57,7 +84,7 @@ exports.fetchArticles = (topicToFilter) => {
         FROM articles 
         LEFT JOIN comments ON articles.article_id = comments.article_id 
         GROUP BY articles.article_id 
-        ORDER BY created_at ASC;`
+        ORDER BY ${sortby} ${order};`
       )
       .then((articles) => {
         return articles.rows;

@@ -48,14 +48,15 @@ describe("GET /api/articles/:article_id", () => {
         const receivedData = articleData.body;
         const expectedArticle = {
           article_id: 1,
-        title: 'Living in the shadow of a great man',
-        topic: 'mitch',
-        author: 'butter_bridge',
-        body: 'I find this existence challenging',
-        created_at: "2020-07-09T20:11:00.000Z",
-        votes: 100,
-        article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
-        comment_count: '11'
+          title: "Living in the shadow of a great man",
+          topic: "mitch",
+          author: "butter_bridge",
+          body: "I find this existence challenging",
+          created_at: "2020-07-09T20:11:00.000Z",
+          votes: 100,
+          article_img_url:
+            "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          comment_count: "11",
         };
         expect(receivedData.article).toMatchObject(expectedArticle);
       });
@@ -371,6 +372,31 @@ describe("GET /api/articles (topic query)", () => {
         expect(body.msg).toEqual("No Content");
       });
   });
-  
-  
+});
+
+describe("GET /api/articles (sorting queries)", () => {
+  it("Status 200 - Returns articles sorted by column name", () => {
+    return request(app)
+      .get("/api/articles?sorted_by=title")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("title");
+      });
+  });
+  it("Status 200 - Returns articles sorted by column name and order", () => {
+    return request(app)
+      .get("/api/articles?sorted_by=author&order=desc")
+      .expect(200)
+      .then((response) => {
+        expect(response.body.articles).toBeSortedBy("author", { descending: true });
+      });
+  });
+  it("Status 404 - Returns an error message if sorted_by value doesn't exist", () => {
+    return request(app)
+      .get("/api/articles?sorted_by=testing")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Not Found");
+      });
+  });
 });
