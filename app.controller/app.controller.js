@@ -8,7 +8,6 @@ const {
   addVoteToArticle,
   deleteCommentById,
   fetchUsers,
-  fetchArticlesByTopic,
 } = require("../app.model/app.model");
 
 exports.getTopicsRequest = (request, response, next) => {
@@ -40,7 +39,11 @@ exports.getArticleByIdRequest = (request, response, next) => {
     });
 };
 exports.getArticlesRequest = (request, response, next) => {
-  fetchArticles(request.query.topic)
+  fetchArticles(
+    request.query.topic,
+    request.query.sorted_by,
+    request.query.order
+  )
     .then((articleReceived) => {
       const articles = articleReceived;
       return response.status(200).send({ articles });
