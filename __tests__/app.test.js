@@ -388,7 +388,9 @@ describe("GET /api/articles (sorting queries)", () => {
       .get("/api/articles?sorted_by=author&order=desc")
       .expect(200)
       .then((response) => {
-        expect(response.body.articles).toBeSortedBy("author", { descending: true });
+        expect(response.body.articles).toBeSortedBy("author", {
+          descending: true,
+        });
       });
   });
   it("Status 404 - Returns an error message if sorted_by value doesn't exist", () => {
@@ -397,6 +399,32 @@ describe("GET /api/articles (sorting queries)", () => {
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("Not Found");
+      });
+  });
+});
+
+describe("GET /api/users/:username", () => {
+  it("Status 200 - Should return an a user by username.", () => {
+    return request(app)
+      .get("/api/users/butter_bridge")
+      .expect(200)
+      .then((userData) => {
+        const receivedUser = userData.body.users[0];
+        const expectedUser = {
+          username: "butter_bridge",
+          name: "jonny",
+          avatar_url:
+            "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+        };
+        expect(receivedUser).toMatchObject(expectedUser);
+      });
+  });
+  it("Status 404 - Should return a not found error when the user does not exist.", () => {
+    return request(app)
+      .get("/api/users/noonewouldusethis")
+      .expect(404)
+      .then((error) => {
+        expect(error.body.msg).toEqual("Not Found");
       });
   });
 });
