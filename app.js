@@ -1,4 +1,7 @@
 const express = require("express");
+const fs = require("fs");
+const morgan = require("morgan");
+const path = require("path");
 const {
   getTopicsRequest,
   getEndpointsRequest,
@@ -19,6 +22,11 @@ const {
 const app = express();
 
 app.use(express.json());
+
+const accessLogStream = fs.createWriteStream(path.join(__dirname, "access.log"), {
+  flags: "a",
+});
+app.use(morgan("combined", { stream: accessLogStream }));
 
 app.get("/api", getEndpointsRequest);
 app.get("/api/articles", getArticlesRequest);
