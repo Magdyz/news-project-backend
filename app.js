@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 const {
   getTopicsRequest,
   getEndpointsRequest,
@@ -21,6 +22,7 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan("combined"));
+app.use(cors());
 
 app.get("/api", getEndpointsRequest);
 app.get("/api/articles", getArticlesRequest);
