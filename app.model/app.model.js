@@ -125,14 +125,16 @@ exports.addVoteToArticle = (inc_votes, articleId) => {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }
   return dataBaseConnection
-    .query("SELECT * FROM articles WHERE article_id = $1", [articleId])
+    .query(
+      "UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *",
+      [inc_votes, articleId]
+    )
     .then((result) => {
-      const articleToPatch = result.rows[0];
-      if (!articleToPatch) {
-        return Promise.reject({ status: 404, msg: "Invalid  Article ID" });
+      const patchedArticle = result.rows[0];
+      if (!patchedArticle) {
+        return Promise.reject({ status: 404, msg: "Invalid Article ID" });
       }
-      articleToPatch.votes += inc_votes;
-      return articleToPatch;
+      return patchedArticle;
     });
 };
 exports.deleteCommentById = (commentId) => {
