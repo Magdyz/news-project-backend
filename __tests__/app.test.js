@@ -275,7 +275,7 @@ describe("PATCH /api/articles/:article_id", () => {
       .send(patchBody)
       .expect(404)
       .then((response) => {
-        expect(response.body.msg).toBe("Invalid  Article ID");
+        expect(response.body.msg).toBe("Invalid Article ID");
       });
   });
 });
